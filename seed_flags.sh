@@ -27,11 +27,11 @@ usermod -a -G cat_enthusiasts whiskers
 # run the bash command with flag
 sudo -u whiskers echo $ctf_flag_13 > /dev/null
 sudo -u whiskers echo $ctf_flag_13 >> ~/.bash_history
-sudo -u whiskers history -w
+sudo -u whiskers bash -c "history -w"
 
 # -------------- FLAG 2 --------------
 # linux pslist/psaux
-sudo -u whiskers exec -a $ctf_flag_2 sleep 3600 &
+sudo -u whiskers bash -c "exec -a $ctf_flag_2 sleep 3600" &
 sudo -u whiskers echo $!
 
 # -------------- FLAG 3 --------------
@@ -39,14 +39,21 @@ sudo -u whiskers echo $!
 # -------------- FLAG 4 --------------
 # linux.ip
 # Note: Root creates the dummy interface, not whiskers
-whiskers ALL=(root) NOPASSWD: /usr/sbin/ip link add catnip0 type dummy
+echo "whiskers ALL=(root) NOPASSWD: /usr/sbin/ip" > /etc/sudoers.d/whiskers-ip
+chmod 440 /etc/sudoers.d/whiskers-ip
+
+sudo ip link add catnip0 type dummy
+sudo ip link set catnip0 up
 
 #ip link add catnip0 type dummy
 #ip link set catnip0 up
 echo $ctf_flag_4 | sudo tee /sys/class/net/catnip0/ifalias > /dev/null
 
 # -------------- FLAG 5 --------------
-whiskers ALL=(root) NOPASSWD: echo $ctf_flag_5 | tee /dev/kmsg
+echo "whiskers ALL=(root) NOPASSWD: /bin/echo" > /etc/sudoers.d/whiskers-echo
+chmod 440 /etc/sudoers.d/whiskers-echo
+
+sudo -u whiskers echo $ctf_flag_5 | tee /dev/kmsg
 
 # -------------- FLAG 6 --------------
 whiskers ALL=(root) NOPASSWD: echo $ctf_flag_6 >> /etc/default/grub
@@ -72,7 +79,7 @@ PY
 sudo -u whiskers python3 -c 'import time, sys; time.sleep(300)' $ctf_flag_9 &
 
 # -------------- FLAG 10 --------------
-sudo -u whiskers export kitty_clue=$ctf_flag_10
+sudo -u whiskers bash -c "export kitty_clue='$ctf_flag_10'; sleep 1"
 
 # -------------- FLAG 11 --------------
 echo $ctf_flag_11 > /tmp/flagmaps.txt
