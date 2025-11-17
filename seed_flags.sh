@@ -1,18 +1,18 @@
 #!/bin/bash
 # Global VARS: 
-ctf_flag_1 = "CAT_HISS_HOME"
-ctf_flag_2 = "CAT_SOCKS_SILLY"
+ctf_flag_1="CAT_HISS_HOME"
+ctf_flag_2="CAT_SOCKS_SILLY"
 #ctf_flag_3 = "CAT_YARN_SCREEN"
-ctf_flag_4 = "CAT_FELINE_GLASSES"
-ctf_flag_5 = "CAT_MEOW_CAMERA"
-ctf_flag_6 = "CAT_SIAMESE_ELEPHANT"
-ctf_flag_7 = "CAT_CLAWS_PUMPKIN"
-ctf_flag_8 = "CAT_FUR_RUG"
-ctf_flag_9 = "CAT_TABBY_SHAPE"
-ctf_flag_10 = "CAT_YOWL_DRAGON"
-ctf_flag_11 = "CAT_MICE_HIPPO"
-ctf_flag_12 = "CAT_STRAY_PENCIL"
-ctf_flag_13 = "CAT_BIRD_PHONE"
+ctf_flag_4="CAT_FELINE_GLASSES"
+ctf_flag_5="CAT_MEOW_CAMERA"
+ctf_flag_6="CAT_SIAMESE_ELEPHANT"
+ctf_flag_7="CAT_CLAWS_PUMPKIN"
+ctf_flag_8="CAT_FUR_RUG"
+ctf_flag_9="CAT_TABBY_SHAPE"
+ctf_flag_10="CAT_YOWL_DRAGON"
+ctf_flag_11="CAT_MICE_HIPPO"
+ctf_flag_12="CAT_STRAY_PENCIL"
+ctf_flag_13="CAT_BIRD_PHONE"
 
 # -------------- SETUP --------------
 # create Whiskers user
