@@ -2,7 +2,7 @@
 # Global VARS: 
 ctf_flag_1="CAT_HISS_HOME"
 ctf_flag_2="CAT_SOCKS_SILLY"
-#ctf_flag_3 = "CAT_YARN_SCREEN"
+ctf_flag_3="CAT_YARN_SCREEN"
 ctf_flag_4="CAT_FELINE_GLASSES"
 ctf_flag_5="CAT_MEOW_CAMERA"
 ctf_flag_6="CAT_SIAMESE_ELEPHANT"
@@ -15,32 +15,42 @@ ctf_flag_12="CAT_STRAY_PENCIL"
 ctf_flag_13="CAT_BIRD_PHONE"
 
 # -------------- SETUP --------------
-# create Whiskers user
-useradd -m -s /bin/bash whiskers
-echo "whiskers:whisker-cat-mouse" | chpasswd
+# Check if whiskers exists, and if not, make them
+if ! id whiskers &>/dev/null; then
+    useradd -m -s /bin/bash whiskers
+    echo "whiskers:whisker-cat-mouse" | chpasswd
+fi
+
 # create cat_enthusiasts group 
-groupadd cat_enthusiasts -g 636174
+if ! getent group cat_enthusiasts &>/dev/null; then
+    groupadd cat_enthusiasts -g 636174
+fi
 # add whiskers to cat_enthusiasts
 usermod -a -G cat_enthusiasts whiskers
 
 # -------------- FLAG 1 --------------
 # run the bash command with flag
-sudo -u whiskers echo $ctf_flag_13 > /dev/null
-sudo -u whiskers echo $ctf_flag_13 >> ~/.bash_history
-sudo -u whiskers bash -c "history -w"
+sudo -u whiskers bash -c "echo $ctf_flag_13 > /dev/null"
+sudo -u whiskers bash -c "echo $ctf_flag_13 >> /home/whiskers/.bash_history; history -w"
 
 # -------------- FLAG 2 --------------
 # linux pslist/psaux
-sudo -u whiskers bash -c "exec -a $ctf_flag_2 sleep 3600" &
-sudo -u whiskers echo $!
+sudo -u whiskers bash -c "exec -a '$ctf_flag_2' sleep 3600" &
 
 # -------------- FLAG 3 --------------
-
+sudo -u whiskers bash -c "exec -a '$ctf_flag_3' env YARN_FLAG='CAT_YARN_SCREEN' python3 - <<'PY' &
+import time, os
+# keep the process alive so its env and name are present in memory
+time.sleep(300)
+PY"
 # -------------- FLAG 4 --------------
 # linux.ip
 # Note: Root creates the dummy interface, not whiskers
-echo "whiskers ALL=(root) NOPASSWD: /usr/sbin/ip" > /etc/sudoers.d/whiskers-ip
-chmod 440 /etc/sudoers.d/whiskers-ip
+if [ ! -f /etc/sudoers.d/whiskers-ip ]; then
+    # whiskers, on all hosts, as root, with no password, can run ip commands
+    echo "whiskers ALL=(root) NOPASSWD: /usr/sbin/ip" > /etc/sudoers.d/whiskers-ip
+    chmod 440 /etc/sudoers.d/whiskers-ip
+fi
 
 sudo ip link add catnip0 type dummy
 sudo ip link set catnip0 up
@@ -50,18 +60,30 @@ sudo ip link set catnip0 up
 echo $ctf_flag_4 | sudo tee /sys/class/net/catnip0/ifalias > /dev/null
 
 # -------------- FLAG 5 --------------
-echo "whiskers ALL=(root) NOPASSWD: /bin/echo" > /etc/sudoers.d/whiskers-echo
-chmod 440 /etc/sudoers.d/whiskers-echo
+if [ ! -f /etc/sudoers.d/whiskers-echo ]; then
+    # whiskers, on all hosts, as root, with no password
+    echo "whiskers ALL=(root) NOPASSWD: /bin/echo" > /etc/sudoers.d/whiskers-echo
+    chmod 440 /etc/sudoers.d/whiskers-echo
+fi
 
-sudo -u whiskers echo $ctf_flag_5 | tee /dev/kmsg
+# CHANGED: corrected command so it actually invokes echo as whiskers
+sudo -u whiskers bash -c "echo $ctf_flag_5" | sudo tee /dev/kmsg >/dev/null
+
+
 
 # -------------- FLAG 6 --------------
-whiskers ALL=(root) NOPASSWD: echo $ctf_flag_6 >> /etc/default/grub
+if [ ! -f /etc/sudoers.d/whiskers-grub ]; then
+    echo "whiskers ALL=(root) NOPASSWD: /usr/bin/tee" > /etc/sudoers.d/whiskers-grub
+    chmod 440 /etc/sudoers.d/whiskers-grub
+fi
+
+# CHANGED: whiskers writes to grub using tee (that’s the safe pattern)
+sudo -u whiskers /usr/bin/tee -a /etc/default/grub <<<"$ctf_flag_6" >/dev/null
 
 # -------------- FLAG 7 --------------
-sudo -u whiskers echo $ctf_flag_7 > /tmp/CAT_CLAWS_PUMPKIN.txt
+sudo -u whiskers bash -c "echo $ctf_flag_7 > /tmp/CAT_CLAWS_PUMPKIN.txt"
 sudo -u whiskers tail -f /tmp/CAT_CLAWS_PUMPKIN.txt &
-sudo -u whiskers bash -c "exec -a CAT_CLAWS exec 3> /tmp/CAT-CLAWS-TEAR.txt; echo 'CAT-CLAWS-TEAR' >&3; sleep 300" &
+sudo -u whiskers bash -c "exec -a CAT_CLAWS bash -c 'exec 3> /tmp/CAT-CLAWS-TEAR.txt; echo CAT-CLAWS-TEAR >&3; sleep 300'" &
 
 # -------------- FLAG 8 --------------
 sudo -u whiskers python3 - << 'PY' &
@@ -102,11 +124,17 @@ PY
 rm /tmp/flagmaps.txt
 
 # -------------- FLAG 12 --------------
-whiskers ALL=(root) NOPASSWD: mkdir -p /mnt/$ctf_flag_12
-whiskers ALL=(root) NOPASSWD: mount -t tmpfs -o size=10m tmpfs /mnt/$ctf_flag_12 
+if [ ! -f /etc/sudoers.d/whiskers-mount ]; then
+    echo "whiskers ALL=(root) NOPASSWD: /bin/mkdir, /bin/mount" > /etc/sudoers.d/whiskers-mount
+    chmod 440 /etc/sudoers.d/whiskers-mount
+fi
+
+sudo -u whiskers mkdir -p "/mnt/$ctf_flag_12"
+sudo -u whiskers mount -t tmpfs -o size=10m tmpfs "/mnt/$ctf_flag_12"
+
 
 # -------------- FLAG 13 --------------
 # run the bash command with flag
-sudo -u whiskers echo $ctf_flag_13 > /dev/null
-sudo -u whiskers echo $ctf_flag_13 >> ~/.bash_history
+sudo -u whiskers bash -c "echo $ctf_flag_13 > /dev/null"
+sudo -u whiskers bash -c "echo $ctf_flag_13 >> /home/whiskers/.bash_history"
 sudo -u whiskers history -w
