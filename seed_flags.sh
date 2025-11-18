@@ -94,6 +94,17 @@ if [ ! -f /tmp/libwhisker.so ]; then
     chown whiskers:whiskers /tmp/libwhisker.so 2>/dev/null || true
 fi
 
+sudo -u whiskers python3 - << 'PY' &
+import ctypes
+import time
+
+# load the shared library
+lib = ctypes.CDLL("/tmp/libwhisker.so")
+
+# keep the process alive so volatility can see the mapping
+time.sleep(300)
+PY
+
 # -------------- FLAG 9 --------------
 sudo -u whiskers python3 -c 'import time, sys; time.sleep(300)' $ctf_flag_9 &
 
