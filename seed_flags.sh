@@ -121,7 +121,7 @@ if [ ! -f /etc/sudoers.d/whiskers-mount ]; then
 fi
 
 sudo -u whiskers mkdir -p "/mnt/$ctf_flag_12"
-sudo -u whiskers mount -t tmpfs -o size=10m tmpfs "/mnt/$ctf_flag_12"
+sudo -u whiskers sudo mount -t tmpfs -o size=10m tmpfs "/mnt/$ctf_flag_12"
 
 # ---------------- FLAG 13 ----------------
 sudo -u whiskers bash -c "echo $ctf_flag_13 >> /home/whiskers/.bash_history"
