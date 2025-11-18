@@ -1,18 +1,18 @@
 #!/bin/bash
 # Global VARS: 
-ctf_flag_1="CAT_HISS_HOME"
-ctf_flag_2="CAT_SOCKS_SILLY"
-ctf_flag_3="CAT_YARN_SCREEN"
-ctf_flag_4="CAT_FELINE_GLASSES"
-ctf_flag_5="CAT_MEOW_CAMERA"
-ctf_flag_6="CAT_SIAMESE_ELEPHANT"
-ctf_flag_7="CAT_CLAWS_PUMPKIN"
-ctf_flag_8="CAT_FUR_RUG"
-ctf_flag_9="CAT_TABBY_SHAPE"
-ctf_flag_10="CAT_YOWL_DRAGON"
-ctf_flag_11="CAT_MICE_HIPPO"
-ctf_flag_12="CAT_STRAY_PENCIL"
-ctf_flag_13="CAT_BIRD_PHONE"
+ctf_flag_1="CAT_HISS_THERE"
+ctf_flag_2="CAT_SOCKS_IS"
+ctf_flag_3="CAT_YARN_MANY"
+ctf_flag_4="CAT_FELINE_KINDS"
+ctf_flag_5="CAT_MEOW_OF"
+ctf_flag_6="CAT_SIAMESE_CATS"
+ctf_flag_7="CAT_CLAWS_BUT"
+ctf_flag_8="CAT_FUR_MY"
+ctf_flag_9="CAT_TABBY_FAVORITE"
+ctf_flag_10="CAT_YOWL_KIND"
+ctf_flag_11="CAT_MICE_ARE"
+ctf_flag_12="CAT_STRAY_BLACK"
+ctf_flag_13="CAT_BIRD_CATS"
 
 # -------------- SETUP --------------
 # Check if whiskers exists, and if not, make them
@@ -72,13 +72,15 @@ sudo -u whiskers bash -c "echo $ctf_flag_5" | sudo tee /dev/kmsg >/dev/null
 
 
 # -------------- FLAG 6 --------------
-if [ ! -f /etc/sudoers.d/whiskers-grub ]; then
-    echo "whiskers ALL=(root) NOPASSWD: /usr/bin/tee" > /etc/sudoers.d/whiskers-grub
-    chmod 440 /etc/sudoers.d/whiskers-grub
-fi
+# create the sudoers drop-in, secure it, and verify ownership/mode
+cat > /etc/sudoers.d/whiskers-grub <<'EOF'
+whiskers ALL=(root) NOPASSWD: /usr/bin/tee
+EOF
+chmod 440 /etc/sudoers.d/whiskers-grub
+chown root:root /etc/sudoers.d/whiskers-grub
 
-# CHANGED: whiskers writes to grub using tee (that’s the safe pattern)
-sudo -u whiskers /usr/bin/tee -a /etc/default/grub <<<"$ctf_flag_6" >/dev/null
+# quick test (returns 0 on success)
+sudo -u whiskers sudo -n /usr/bin/tee -a /etc/default/grub <<< "GRUB_TEST_ENTRY" >/dev/null 2>&1
 
 # -------------- FLAG 7 --------------
 sudo -u whiskers bash -c "echo $ctf_flag_7 > /tmp/CAT_CLAWS_PUMPKIN.txt"
@@ -86,6 +88,15 @@ sudo -u whiskers tail -f /tmp/CAT_CLAWS_PUMPKIN.txt &
 sudo -u whiskers bash -c "exec -a CAT_CLAWS bash -c 'exec 3> /tmp/CAT-CLAWS-TEAR.txt; echo CAT-CLAWS-TEAR >&3; sleep 300'" &
 
 # -------------- FLAG 8 --------------
+if [ ! -f /tmp/libwhisker.so ]; then
+  cat > /tmp/libwhisker.c <<'C_CODE'
+  /* minimal shared lib so CDLL can load it */
+  int libwhisker_dummy(void) { return 42; }
+C_CODE
+  gcc -shared -fPIC -o /tmp/libwhisker.so /tmp/libwhisker.c >/dev/null 2>&1 && rm -f /tmp/libwhisker.c
+  chmod 755 /tmp/libwhisker.so
+  chown whiskers:whiskers /tmp/libwhisker.so 2>/dev/null || true
+fi
 sudo -u whiskers python3 - << 'PY' &
 import ctypes
 import time
