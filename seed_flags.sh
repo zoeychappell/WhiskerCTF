@@ -89,24 +89,10 @@ sudo -u whiskers bash -c "exec -a CAT_CLAWS bash -c 'exec 3> /tmp/CAT-CLAWS-TEAR
 
 # -------------- FLAG 8 --------------
 if [ ! -f /tmp/libwhisker.so ]; then
-  cat > /tmp/libwhisker.c <<'C_CODE'
-  /* minimal shared lib so CDLL can load it */
-  int libwhisker_dummy(void) { return 42; }
-C_CODE
-  gcc -shared -fPIC -o /tmp/libwhisker.so /tmp/libwhisker.c >/dev/null 2>&1 && rm -f /tmp/libwhisker.c
-  chmod 755 /tmp/libwhisker.so
-  chown whiskers:whiskers /tmp/libwhisker.so 2>/dev/null || true
+    ln -s /lib/x86_64-linux-gnu/libc.so.6 /tmp/libwhisker.so 2>/dev/null \
+    || ln -s $(ldconfig -p | awk '/libc\.so/ {print $NF; exit}') /tmp/libwhisker.so
+    chown whiskers:whiskers /tmp/libwhisker.so 2>/dev/null || true
 fi
-sudo -u whiskers python3 - << 'PY' &
-import ctypes
-import time
-
-# load the shared library
-lib = ctypes.CDLL("/tmp/libwhisker.so")
-
-# keep the process alive so volatility can see the mapping
-time.sleep(300)
-PY
 
 # -------------- FLAG 9 --------------
 sudo -u whiskers python3 -c 'import time, sys; time.sleep(300)' $ctf_flag_9 &
