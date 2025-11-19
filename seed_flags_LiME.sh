@@ -20,12 +20,12 @@ ctf_flag_11="CAT_TABBY_ARE"
 ctf_flag_12="CAT_YARN_BLACK"
 ctf_flag_13="CAT_YOWL_CATS"
 # ---------------- LiME SETUP ----------------
-sudo apt update
-sudo apt install --reinstall gcc-12
-sudo apt install git 
-sudo ln -s -f /usr/bin/gcc-12 /usr/bin/gcc
-sudo apt install linux-headers-4.9.0.6-amd64
-sudo apt install build-essential
+sudo apt update -y
+sudo apt install --reinstall gcc-12 -y
+sudo apt install git -y
+sudo ln -s -f /usr/bin/gcc-12 /usr/bin/gcc -y
+sudo apt install linux-headers-$(uname -r) -y
+sudo apt install build-essential -y
 # Clone LiME from the source repo
 git clone https://github.com/504ensicsLabs/LiME
 
@@ -150,7 +150,7 @@ echo "[+] Starting LiME memory acquisition..."
 
 cd LiME/src
 make
-sudo insmod ./lime-$(uname -r).ko "path=/home/whiskers/Desktop/LiME_output.lime" "format=lime"
+sudo insmod ./lime-$(uname -r).ko "path=./LiME_output.lime" "format=lime"
 
 
 echo "[+] LiME is now dumping memory to: $LIME_OUTPUT"
