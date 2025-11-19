@@ -6,6 +6,7 @@
 # The purpose is to show a more accurate forensics case investigation.
 
 # Run the script before runing seed_flags
+sudo apt update
 sudo apt install curl
 
 LIST_OF_CMDs=(
