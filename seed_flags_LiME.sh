@@ -22,11 +22,13 @@ ctf_flag_13="CAT_YOWL_CATS"
 # ---------------- LiME SETUP ----------------
 sudo apt update
 sudo apt install --reinstall gcc-12
+sudo apt install git 
 sudo ln -s -f /usr/bin/gcc-12 /usr/bin/gcc
 sudo apt install linux-headers-4.9.0.6-amd64
 sudo apt install build-essential
 # Clone LiME from the source repo
 git clone https://github.com/504ensicsLabs/LiME
+
 # ---------------- USER SETUP ----------------
 if ! id whiskers &>/dev/null; then
     useradd -m -s /bin/bash whiskers
