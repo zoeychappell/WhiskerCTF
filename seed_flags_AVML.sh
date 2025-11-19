@@ -161,7 +161,7 @@ sudo -u whiskers bash -c "history -w"
 ###############################################
 echo "[+] Starting AVML memory acquisition..."
 
-
+sudo ./avml avml_output.lime
 
 echo "[+] LiME is now dumping memory to: $LIME_OUTPUT"
 echo "[+] All forensic artifacts remain running indefinitely."
