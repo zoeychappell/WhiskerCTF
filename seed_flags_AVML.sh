@@ -21,7 +21,7 @@ ctf_flag_12="CAT_YARN_BLACK"
 ctf_flag_13="CAT_YOWL_CATS"
 # ---------------- AVLM SETUP ----------------
 sudo apt update
-sudo apt install -y curl wget
+sudo apt install -y curl wget git
 # Install MUSL
 sudo apt-get install musl-dev musl-tools musl
 
