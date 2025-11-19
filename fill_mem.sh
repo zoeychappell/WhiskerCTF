@@ -1,46 +1,45 @@
-#/bin/bash
+#!/bin/bash
 
-# This script creates legitimate activity for the purpose of hiding 
-# the flags in real memory. 
+# This script creates legitimate activity for the purpose of hiding
+# the flags in real memory.
 
-# The purpose is to show a more accurate forensics case investigation. 
+# The purpose is to show a more accurate forensics case investigation.
 
-# Run the script two times, once at the beginning (before seed_flags)
-# and once after.
+# Run the script before runing seed_flags
 sudo apt install curl
 
 LIST_OF_CMDs=(
-    "uname -r"
-    "uname -a"
-    "timedatectl"
-    "hostname"
-    "finger"
-    "whoami"
-    "date"
-    "cd"
-    "dmesg"
-    "ls"
-    "lsblk"
-    "pwd"
-    "ps"
-    "free"
-    "vmstat"
-    "lsof"
-    "journalctl"
-    "ip"
-    "netstat"
-    "clear"
-    "mkdir .hidden"
-    "ping google.com"
-
+	"uname -r"
+	"uname -a"
+	"timedatectl"
+	"hostname"
+	"finger"
+	"whoami"
+	"date"
+	"cd"
+	"ls"
+	"lsblk"
+	"pwd"
+	"ps"
+	"free"
+	"vmstat"
+	"lsof"
+	"ip"
+	"netstat"
+	"clear"
+	"mkdir .hidden"
+	"ping -c 4  google.com"
 )
+
 # Execute random commands
-for i in {1..50}:
-    CMD=${LIST_OF_CMDs[$RANDOM % ${#CMDS[@]} ]}
-    # Execute the command
-    bash -c "$CMD" 
-    # pause a random amount of time
-    sleep $((RANDOM % 4))
+for i in {1..50}
+do
+	CMD=${LIST_OF_CMDs[$RANDOM % ${#LIST_OF_CMDs[@]} ]}
+	# Execute the command
+	bash -c "$CMD"
+	# Pause a random amount of time
+	sleep $((RANDOM % 4))
+done
 
 # Create some random weird scripts
 touch not_suspicious.py
@@ -53,8 +52,10 @@ touch malware.py
 touch malware234.py
 
 for h in {1..30}
-    # create a bunch of files with just numbers as name
-    touch $RANDOM 
+do
+	# Create a bunch of files with just numbers as names
+	touch $RANDOM
+done
 
 # Create some random directories
 mkdir .hidden
@@ -62,17 +63,22 @@ mkdir ..hidden
 mkdir ...hidden
 mkdir .....hidden
 mkdir .malware_db
-# Create random directories with numbers as name
+
+# Create random directories with numbers as names
 for k in {1..30}
-    mkdir $RANDOM
+do
+	mkdir $RANDOM
+done
 
 # Generate fake network traffic
 for j in {1..20}
-    curl -s https://icanhazip.com >/dev/null
-    curl -s https://google.com >/dev/null
-    sleep $((RANDOM % 4))
+do
+	curl -s https://icanhazip.com >/dev/null
+	curl -s https://google.com >/dev/null
+	sleep $((RANDOM % 4))
+done
 
-# Browser artifcats
+# Browser artifacts
 sudo apt install firefox -y
 firefox https://cnn.com &
 firefox https://google.com &
@@ -85,5 +91,7 @@ firefox https://icanhazip.com &
 
 # Failed SSH attempts
 for i in {1..40}
-    ssh user@127.0.0.1 -p 22 "test" >/dev/null
-    
+do
+	ssh user@127.0.0.1 -p 22 "test" >/dev/null
+done
+
