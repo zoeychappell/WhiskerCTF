@@ -5,7 +5,7 @@ This CTF is primarily focused on using the Volatility Framework 3 for Linux memo
 # Flags: 
 There are 13 flags in total. 
 Each flag follows a consistent format
-	CAT_<word related to cats>_<word>
+	CAT_/<word related to cats/>_/<word/>
 
 	So an example flag would be: 
 		CAT_CATNIP_WATER
