@@ -42,7 +42,7 @@ fi
 usermod -a -G cat_enthusiasts whiskers
 
 # ---------------- FLAG 1 ----------------
-sudo -u whiskers bash -c "echo $ctf_flag_13 >> /home/whiskers/.bash_history; history -w"
+sudo -u whiskers bash -c "echo $ctf_flag_1 >> /home/whiskers/.bash_history; history -w"
 
 # ---------------- FLAG 2 ----------------
 sudo -u whiskers bash -c "exec -a '$ctf_flag_2' sleep 99999999" &
