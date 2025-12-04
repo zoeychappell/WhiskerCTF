@@ -92,7 +92,7 @@ EOF
 chmod 440 /etc/sudoers.d/whiskers-grub
 chown root:root /etc/sudoers.d/whiskers-grub
 
-sudo -u whiskers sudo -n /usr/bin/tee -a /etc/default/grub <<< "GRUB_TEST_ENTRY" >/dev/null 2>&1
+sudo -u whiskers sudo -n /usr/bin/tee -a /etc/default/grub <<< $ctf_flag_6 >/dev/null 2>&1
 
 # ---------------- FLAG 7 ----------------
 sudo -u whiskers bash -c "echo $ctf_flag_7 > /tmp/$ctf_flag_7.txt"
